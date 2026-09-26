@@ -4,7 +4,7 @@ import { createPublicClient, createWalletClient, encodeFunctionData, http, parse
 import { generatePrivateKey, privateKeyToAccount } from "viem/accounts";
 import { monadTestnet as chain } from "viem/chains";
 
-const CONTRACT = "0x649f84c83edfb7e16BA475Ae9805606d23130e7e";
+const CONTRACT = "0x36eb3A9E67c35248a3eDE9f359e346F5Ba4E0C14";
 const RPCS = ["https://testnet-rpc.monad.xyz", "https://rpc.ankr.com/monad_testnet", "https://rpc-testnet.monadinfra.com"];
 const COUNT = Number(process.argv[2] ?? 50);
 const FUND = parseEther("0.04"); // one vote: 0.0005 MON + gas

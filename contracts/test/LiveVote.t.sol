@@ -99,4 +99,20 @@ contract LiveVoteTest is Test {
         vm.expectRevert(LiveVote.InvalidOption.selector);
         poll.vote{value: UNIT}(3, 1);
     }
+
+    function test_ShardsSumAcrossManyVoters() public {
+        // 40 voters land in many different shards; totals and voter count must still add up.
+        for (uint256 i = 1; i <= 40; ++i) {
+            address v = address(uint160(0x1000 + i));
+            vm.deal(v, 1 ether);
+            vm.prank(v);
+            poll.vote{value: UNIT}(i % 3, 1);
+        }
+        (uint256[] memory votes, uint256 pot, uint256 voters,) = poll.getResults();
+        assertEq(votes[0] + votes[1] + votes[2], 40);
+        assertEq(votes[1], 14); // i % 3 == 1 for i in 1..40
+        assertEq(voters, 40);
+        assertEq(poll.voterCount(), 40);
+        assertEq(pot, 40 * UNIT);
+    }
 }

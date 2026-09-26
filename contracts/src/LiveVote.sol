@@ -14,9 +14,14 @@ contract LiveVote is Ownable, ReentrancyGuard {
     uint256 public immutable unitPrice;
 
     bool public open = true;
-    uint256 public voterCount;
 
-    uint256[] private _votes;
+    /// Counters are split into SHARDS slots chosen by voter address, so votes from
+    /// different people rarely write the same storage slot (fewer conflicts under
+    /// Monad's optimistic parallel execution). Views sum the shards.
+    uint256 public constant SHARDS = 16;
+    mapping(uint256 option => uint256[SHARDS]) private _voteShards;
+    uint256[SHARDS] private _voterShards;
+    uint256 private immutable _optionCount;
     mapping(address => mapping(uint256 => uint256)) public votesOf;
     mapping(address => bool) public hasVoted;
 
@@ -44,7 +49,7 @@ contract LiveVote is Ownable, ReentrancyGuard {
         _labels = labels_;
         _recipients = recipients_;
         unitPrice = unitPrice_;
-        _votes = new uint256[](labels_.length);
+        _optionCount = labels_.length;
     }
 
     /// @notice Cost for `voter` to add `n` votes to `option`: ((k+n)^2 - k^2) * unitPrice.
@@ -61,11 +66,12 @@ contract LiveVote is Ownable, ReentrancyGuard {
         uint256 cost = costOf(msg.sender, option, n);
         if (msg.value < cost) revert InsufficientPayment(cost, msg.value);
 
+        uint256 shard = uint256(uint160(msg.sender)) % SHARDS;
         votesOf[msg.sender][option] += n;
-        _votes[option] += n;
+        _voteShards[option][shard] += n;
         if (!hasVoted[msg.sender]) {
             hasVoted[msg.sender] = true;
-            ++voterCount;
+            ++_voterShards[shard];
         }
         emit Voted(msg.sender, option, n, cost);
 
@@ -82,9 +88,10 @@ contract LiveVote is Ownable, ReentrancyGuard {
         if (!open) revert PollClosed();
         open = false;
 
+        uint256[] memory totals = _totals();
         uint256 winner;
-        for (uint256 i = 1; i < _votes.length; ++i) {
-            if (_votes[i] > _votes[winner]) winner = i;
+        for (uint256 i = 1; i < totals.length; ++i) {
+            if (totals[i] > totals[winner]) winner = i;
         }
         uint256 amount = address(this).balance;
         address payable recipient = _recipients[winner];
@@ -101,7 +108,19 @@ contract LiveVote is Ownable, ReentrancyGuard {
         view
         returns (uint256[] memory votes, uint256 pot, uint256 voters, bool isOpen)
     {
-        return (_votes, address(this).balance, voterCount, open);
+        return (_totals(), address(this).balance, voterCount(), open);
+    }
+
+    function voterCount() public view returns (uint256 count) {
+        for (uint256 s; s < SHARDS; ++s) count += _voterShards[s];
+    }
+
+    function _totals() internal view returns (uint256[] memory totals) {
+        totals = new uint256[](_optionCount);
+        for (uint256 i; i < _optionCount; ++i) {
+            uint256[SHARDS] storage shards = _voteShards[i];
+            for (uint256 s; s < SHARDS; ++s) totals[i] += shards[s];
+        }
     }
 
     function getOptions() external view returns (string[] memory labels, address payable[] memory recipients) {

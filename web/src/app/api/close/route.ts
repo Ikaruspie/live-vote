@@ -18,7 +18,7 @@ export async function POST(request: Request) {
       address: LIVE_VOTE_ADDRESS,
       abi: liveVoteAbi,
       functionName: "close",
-      gas: BigInt(150_000),
+      gas: BigInt(200_000),
     });
     return Response.json({ status: receipt.status, hash: receipt.transactionHash });
   } catch (err) {

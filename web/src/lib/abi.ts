@@ -28,6 +28,19 @@ export const liveVoteAbi = [
   },
   {
     "type": "function",
+    "name": "SHARDS",
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
     "name": "close",
     "inputs": [],
     "outputs": [],
@@ -223,7 +236,7 @@ export const liveVoteAbi = [
     "inputs": [],
     "outputs": [
       {
-        "name": "",
+        "name": "count",
         "type": "uint256",
         "internalType": "uint256"
       }
