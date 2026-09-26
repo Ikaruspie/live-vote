@@ -430,3 +430,22 @@ button:focus-visible {
     animation: none !important;
   }
 }
+
+/* ---------- Projector v2 (/screen2): donation meter, race chart, 3-2-1 reveal ---------- */
+.raised { font-size: 64px; font-weight: 700; color: var(--muted); white-space: nowrap; }
+.raised b { font-size: 120px; font-weight: 900; color: var(--signal); margin-right: 16px; letter-spacing: -0.02em; }
+.meter-sub { display: flex; justify-content: space-between; gap: 40px; margin-top: 10px; font-size: 56px; font-weight: 500; color: var(--muted); }
+.meter-sub b { color: var(--chalk); font-weight: 900; }
+.meter-bar { position: relative; height: 36px; margin: 18px 0 30px; background: var(--track); border-radius: 18px; overflow: hidden; }
+.meter-bar i { position: absolute; inset: 0 auto 0 0; width: 0; background: var(--signal); border-radius: 18px; overflow: hidden; transition: width 0.6s cubic-bezier(0.2, 0.7, 0.2, 1); }
+.meter-bar i::after { content: ""; position: absolute; inset: 0; background: linear-gradient(100deg, transparent 30%, rgba(255, 255, 255, 0.65) 50%, transparent 70%); transform: translateX(-100%); animation: shimmer 2.4s ease-in-out infinite; }
+@keyframes shimmer { to { transform: translateX(100%); } }
+.meter-bar.hit { animation: hit 1.2s ease-out; }
+@keyframes hit { from { box-shadow: 0 0 0 8px rgba(255, 210, 63, 0.9), 0 0 80px rgba(255, 210, 63, 0.8); } to { box-shadow: 0 0 0 0 rgba(255, 210, 63, 0); } }
+.chart { position: relative; flex: 1; }
+.chart canvas { display: block; }
+.win .thanks b { color: var(--signal); font-weight: 900; }
+.win > * { transition: opacity 0.4s; }
+.win.counting > * { opacity: 0; }
+.count3 { position: absolute; inset: 0; display: grid; place-items: center; font-size: 560px; font-weight: 900; line-height: 1; color: var(--signal); letter-spacing: -0.04em; text-shadow: 0 0 120px rgba(255, 210, 63, 0.45); pointer-events: none; animation: count3 0.95s ease-out forwards; }
+@keyframes count3 { 0% { transform: scale(1.6); opacity: 0; } 25% { transform: scale(1); opacity: 1; } 80% { transform: scale(0.9); opacity: 1; } 100% { transform: scale(0.7); opacity: 0; } }
