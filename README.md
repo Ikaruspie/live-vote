@@ -10,8 +10,8 @@ Built at **Monad Blitz Berlin, 26.09.2026**.
 |---|---|
 | **Live app (vote)** | https://live-vote-eight.vercel.app |
 | **Projector screen** | https://live-vote-eight.vercel.app/screen |
-| **Contract (Monad testnet)** | [`0xEAF5AA4abe61Cc8D15BEFBC78f1c40c23C7dBEAA`](https://testnet.monadvision.com/address/0xEAF5AA4abe61Cc8D15BEFBC78f1c40c23C7dBEAA) |
-| Explorer (Monadscan) | https://testnet.monadscan.com/address/0xEAF5AA4abe61Cc8D15BEFBC78f1c40c23C7dBEAA |
+| **Contract (Monad testnet)** | [`0x2C6Ee378dB96A16fF22204d19E9b9Bb94533a321`](https://testnet.monadvision.com/address/0x2C6Ee378dB96A16fF22204d19E9b9Bb94533a321) |
+| Explorer (Monadscan) | https://testnet.monadscan.com/address/0x2C6Ee378dB96A16fF22204d19E9b9Bb94533a321 |
 
 The contract is verified on MonadVision and Monadscan.
 
