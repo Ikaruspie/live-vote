@@ -165,62 +165,64 @@ export default function VotePage() {
   const ready = balance !== undefined && balance > BigInt(0) && open;
 
   return (
-    <main className="min-h-dvh bg-gradient-to-b from-[#0A1A3F] via-[#14306B] to-[#2A4F9C] px-4 py-8 text-white">
-      <div className="mx-auto flex max-w-md flex-col gap-6">
-        <header className="text-center">
-          <p className="text-sm uppercase tracking-[0.25em] text-blue-200">Live Vote · Monad</p>
-          <h1 className="mt-3 text-3xl font-bold leading-tight">{question || "Loading poll…"}</h1>
-          <p className="mt-2 text-sm text-blue-100">
-            Every vote is a micro-donation. More votes on one cause cost more (quadratic).
-          </p>
-        </header>
+    <main className="p-wrap">
+      <div className="p-eyebrow">LIVE VOTE · MONAD TESTNET</div>
 
-        <section className="flex flex-col gap-3">
-          {labels.map((label, i) => (
-            <button
-              key={label}
-              onClick={() => vote(i)}
-              disabled={!ready || busy !== null}
-              className="flex items-center justify-between rounded-2xl bg-white/10 px-5 py-5 text-left ring-1 ring-white/20 transition active:scale-[0.98] enabled:hover:bg-white/20 disabled:opacity-50"
-            >
-              <span>
-                <span className="block text-xl font-semibold">{label}</span>
-                <span className="text-sm text-blue-100">
-                  your votes: {String(myVotes[i] ?? 0)} · next: {formatEther(nextCost(i))} MON
-                </span>
-              </span>
-              <span className="rounded-full bg-white px-4 py-2 text-base font-bold text-[#14306B]">
-                {busy === i ? "…" : "+1"}
-              </span>
-            </button>
-          ))}
+      {!open ? (
+        <section className="p-centered">
+          <div className="big-mark">★</div>
+          <h1>Voting is closed</h1>
+          <p className="p-sub">The winner is on screen now. Thanks for voting!</p>
         </section>
+      ) : (
+        <>
+          <h1>{question || "Loading poll…"}</h1>
+          <p className="p-sub">Every vote is a donation. Each extra vote on the same cause costs more.</p>
 
-        <div
-          className={`rounded-xl px-4 py-3 text-center text-sm ${
-            status.kind === "error" ? "bg-red-500/20 text-red-100" : status.kind === "ok" ? "bg-emerald-500/20 text-emerald-100" : "bg-white/10 text-blue-100"
-          }`}
-        >
-          {status.kind !== "idle" && status.text}
-          {status.kind === "ok" && (
-            <a className="ml-1 underline" href={`${EXPLORER_URL}/tx/${status.hash}`} target="_blank" rel="noreferrer">
-              view
-            </a>
-          )}
-          {!open && <p className="mt-1 font-semibold">This poll is closed.</p>}
-        </div>
+          <ul className="options">
+            {labels.map((label, i) => {
+              const mine = myVotes[i] ?? BigInt(0);
+              return (
+                <li key={label}>
+                  <button
+                    className={`opt${mine > BigInt(0) ? " mine" : ""}`}
+                    onClick={() => vote(i)}
+                    disabled={!ready || busy !== null}
+                  >
+                    <span>
+                      <b>{label}</b>
+                      <small className="num">
+                        {mine > BigInt(0) ? `Your votes: ${mine} · ` : ""}next vote {formatEther(nextCost(i))} MON
+                      </small>
+                    </span>
+                    <span className="plus">{busy === i ? "…" : "+1"}</span>
+                  </button>
+                </li>
+              );
+            })}
+          </ul>
 
-        <footer className="text-center text-xs text-blue-200">
-          {account && (
-            <>
-              Your test wallet {account.address.slice(0, 6)}…{account.address.slice(-4)} ·{" "}
-              {balance !== undefined ? `${Number(formatEther(balance)).toFixed(3)} MON` : "…"}
-              <br />
-            </>
-          )}
-          Testnet only · no real money
-        </footer>
-      </div>
+          <div className={`p-status ${status.kind === "ok" ? "ok" : status.kind === "error" ? "error" : ""}`} role="status">
+            {status.kind === "ok" ? `✓ ${status.text}` : status.kind !== "idle" && status.text}
+            {status.kind === "ok" && (
+              <a href={`${EXPLORER_URL}/tx/${status.hash}`} target="_blank" rel="noreferrer">
+                view
+              </a>
+            )}
+          </div>
+        </>
+      )}
+
+      <footer className="p-foot num">
+        {account && (
+          <>
+            Your test wallet {account.address.slice(0, 6)}…{account.address.slice(-4)} ·{" "}
+            {balance !== undefined ? `${Number(formatEther(balance)).toFixed(3)} MON` : "…"}
+            <br />
+          </>
+        )}
+        Watch the big screen for live results · testnet only, no real money
+      </footer>
     </main>
   );
 }
