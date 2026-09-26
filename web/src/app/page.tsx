@@ -13,7 +13,9 @@ import {
   VOTE_GAS_LIMIT,
 } from "@/lib/config";
 
-const STORAGE_KEY = "live-vote-burner";
+// One burner wallet per poll: a new poll contract means a fresh wallet (and a fresh
+// top-up) in every browser, even ones that voted before.
+const STORAGE_KEY = `live-vote-burner-${LIVE_VOTE_ADDRESS.toLowerCase()}`;
 
 // Testnet-only burner wallet, kept in this browser.
 function loadBurner(): PrivateKeyAccount {
