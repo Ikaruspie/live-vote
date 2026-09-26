@@ -176,6 +176,9 @@ export default function VotePage() {
           <div className="big-mark">★</div>
           <h1>Voting is closed</h1>
           <p className="p-sub">The winner is on screen now. Thanks for voting!</p>
+          <a href="/screen2" className="p-sub" style={{ textDecoration: "underline", marginTop: 12 }}>
+            See the result
+          </a>
         </section>
       ) : (
         <>
@@ -213,6 +216,16 @@ export default function VotePage() {
               </a>
             )}
           </div>
+
+          {myVotes.some((v) => v > BigInt(0)) && (
+            <a
+              href="/screen2"
+              className="opt"
+              style={{ marginTop: 12, justifyContent: "center", minHeight: 56, textDecoration: "none" }}
+            >
+              <b>Watch live results →</b>
+            </a>
+          )}
         </>
       )}
 
