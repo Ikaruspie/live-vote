@@ -99,6 +99,9 @@ export default function VotePage() {
             bal = await publicClient.getBalance({ address: acc.address });
           }
           setBalance(bal);
+          // Monad validates balances against state a few blocks back (async execution):
+          // give fresh funds ~3 blocks before the first vote.
+          if (bal > BigInt(0)) await new Promise((r) => setTimeout(r, 1500));
         }
         setStatus(
           bal > BigInt(0)
