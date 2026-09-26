@@ -6,7 +6,7 @@ export { liveVoteAbi } from "./abi";
 export const chain = monadTestnet;
 
 /** Current poll contract on Monad testnet (chain 10143). */
-export const LIVE_VOTE_ADDRESS = "0x36eb3A9E67c35248a3eDE9f359e346F5Ba4E0C14" as const;
+export const LIVE_VOTE_ADDRESS = "0xEAF5AA4abe61Cc8D15BEFBC78f1c40c23C7dBEAA" as const;
 
 export const EXPLORER_URL = "https://testnet.monadvision.com";
 
